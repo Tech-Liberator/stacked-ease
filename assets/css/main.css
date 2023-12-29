@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    @apply h-screen w-full flex flex-col;
+}
+
+#__nuxt {
+    @apply max-h-screen w-full flex flex-grow flex-col;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    @apply rounded-md bg-white;
+}
+
+::-webkit-scrollbar {
+    @apply w-2 bg-white;
+}
+
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    @apply rounded-md bg-gray-700;
+}
+
+#__nuxt {
+    @apply h-full w-full bg-white dark:bg-gray-800;
+}
