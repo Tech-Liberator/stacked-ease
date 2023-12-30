@@ -2,9 +2,10 @@
   <div
     class="h-16 w-full flex justify-between space-x-5 bg-white border-b-2 border-gray-200 dark:bg-gray-800 dark:border-gray-700"
   >
-    <div class="w-16 flex items-center justify-center">
-      <NuxtLink to="/">
+    <div class="w-auto flex items-center justify-center">
+      <NuxtLink to="/" class="text-blue-500 text-xl flex gap-2 items-center uppercase font-semibold px-3">
         <img class="w-10 h-10" src="../../images/Logo.png" alt="" />
+        Stacked Ease
       </NuxtLink>
     </div>
     <div class="flex space-x-5">

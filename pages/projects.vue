@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-screen -mt-16 pt-16 flex">
+  <div class="w-full h-screen flex -mt-16 pt-16 -mb-10 pb-10">
     <div
       class="w-1/5 overflow-y-auto h-full border-r-2 border-gray-200 dark:border-gray-700 p-2"
     >

@@ -8,6 +8,7 @@
           <NuxtPage />
         </div>
       </div>
+      <the-footer />
     </div>
   </NuxtLayout>
 </template>
