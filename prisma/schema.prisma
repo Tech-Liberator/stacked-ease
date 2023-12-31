@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model api {
+  id           String      @id @unique(map: "API_id_key")
+  api_name     String
+  api_url      String
+  http_method  String
+  params       String
+  payload      String
+  status       api_status? @default(ACTIVE)
+  created_date DateTime?   @default(now())
+  updated_date DateTime?
+  project_id   String
+  project      project     @relation(fields: [project_id], references: [id], map: "API_project_id_fkey")
+
+  @@index([project_id], map: "API_project_id_fkey")
+}
+
+model environment {
+  id                      String                       @id @unique(map: "Environment_id_key")
+  environment_name        environment_environment_name @default(LOCAL)
+  environment_description String
+  host_url                String                       @default("http://localhost:8080")
+  status                  environment_status?          @default(ACTIVE)
+  created_date            DateTime?                    @default(now())
+  updated_date            DateTime?
+  project_id              String
+  project                 project                      @relation(fields: [project_id], references: [id], map: "Environment_project_id_fkey")
+
+  @@index([id, environment_name, project_id, status], map: "Environment_id_environment_name_project_id_status_idx")
+  @@index([project_id], map: "Environment_project_id_fkey")
+}
+
+model project {
+  id                  String          @id @unique(map: "Project_id_key")
+  project_name        String
+  project_code        String
+  project_description String
+  status              project_status? @default(ACTIVE)
+  created_date        DateTime?       @default(now())
+  updated_date        DateTime?
+  api                 api[]
+  environment         environment[]
+
+  @@index([id, project_name, project_code, status], map: "Project_id_project_name_project_code_status_idx")
+}
+
+model role {
+  id           String         @id @unique(map: "Role_id_key")
+  role_name    role_role_name @default(USER)
+  status       role_status?   @default(ACTIVE)
+  created_date DateTime?      @default(now())
+  updated_date DateTime?
+  user         user[]
+
+  @@index([id, role_name, status], map: "Role_id_role_name_status_idx")
+}
+
+model user {
+  id           String       @id @unique(map: "User_id_key")
+  first_name   String?
+  last_name    String?
+  email        String?      @unique(map: "User_email_key")
+  status       user_status? @default(ACTIVE)
+  created_date DateTime?    @default(now()) @db.DateTime(0)
+  updated_date DateTime?
+  roleId       String
+  role         role         @relation(fields: [roleId], references: [id], map: "User_roleId_fkey")
+
+  @@index([id, email, first_name, last_name, status], map: "User_id_email_first_name_last_name_status_idx")
+  @@index([roleId], map: "User_roleId_fkey")
+}
+
+enum role_role_name {
+  ADMIN
+  USER
+}
+
+enum environment_environment_name {
+  LOCAL
+  DEVLOPMENT
+  UAT
+  STAGING
+  PRODUCTION
+}
+
+enum role_status {
+  ACTIVE
+  INACTIVE
+  DELETE
+}
+
+enum environment_status {
+  ACTIVE
+  INACTIVE
+  DELETE
+}
+
+enum project_status {
+  ACTIVE
+  INACTIVE
+  DELETE
+}
+
+enum user_status {
+  ACTIVE
+  INACTIVE
+  DELETE
+}
+
+enum api_status {
+  ACTIVE
+  INACTIVE
+  DELETE
+}
