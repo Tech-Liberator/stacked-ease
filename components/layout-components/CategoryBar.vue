@@ -130,4 +130,11 @@
 export default {};
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+.router-link-active {
+  @apply text-blue-600 dark:text-blue-500;
+}
+.router-link-exact-active {
+  @apply text-blue-600 dark:text-blue-500;
+}
+</style>

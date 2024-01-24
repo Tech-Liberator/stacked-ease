@@ -8,30 +8,30 @@ datasource db {
 }
 
 model api {
-  id           String      @id @unique(map: "API_id_key")
+  id           Int           @id @unique(map: "API_id_key") @default(autoincrement())
   api_name     String
   api_url      String
-  http_method  String
+  http_method  http_methods? @default(GET)
   params       String
   payload      String
-  status       api_status? @default(ACTIVE)
-  created_date DateTime?   @default(now())
+  status       api_status?   @default(ACTIVE)
+  created_date DateTime?     @default(now())
   updated_date DateTime?
-  project_id   String
-  project      project     @relation(fields: [project_id], references: [id], map: "API_project_id_fkey")
+  project_id   Int
+  project      project       @relation(fields: [project_id], references: [id], map: "API_project_id_fkey")
 
   @@index([project_id], map: "API_project_id_fkey")
 }
 
 model environment {
-  id                      String                       @id @unique(map: "Environment_id_key")
+  id                      Int                          @id @unique(map: "Environment_id_key")
   environment_name        environment_environment_name @default(LOCAL)
   environment_description String
   host_url                String                       @default("http://localhost:8080")
   status                  environment_status?          @default(ACTIVE)
   created_date            DateTime?                    @default(now())
   updated_date            DateTime?
-  project_id              String
+  project_id              Int
   project                 project                      @relation(fields: [project_id], references: [id], map: "Environment_project_id_fkey")
 
   @@index([id, environment_name, project_id, status], map: "Environment_id_environment_name_project_id_status_idx")
@@ -39,17 +39,29 @@ model environment {
 }
 
 model project {
-  id                  String          @id @unique(map: "Project_id_key")
-  project_name        String
-  project_code        String
-  project_description String
-  status              project_status? @default(ACTIVE)
-  created_date        DateTime?       @default(now())
-  updated_date        DateTime?
-  api                 api[]
-  environment         environment[]
+  id           Int             @id @unique(map: "Project_id_key")
+  project_name String
+  status       project_status? @default(ACTIVE)
+  created_date DateTime?       @default(now())
+  updated_date DateTime?
+  api          api[]
+  environment  environment[]
+  collection   collection[]
 
-  @@index([id, project_name, project_code, status], map: "Project_id_project_name_project_code_status_idx")
+  @@index([id, project_name, status], map: "Project_id_project_name_status_idx")
+}
+
+model collection {
+  id              Int             @id @unique(map: "Collection_id_key")
+  collection_name String
+  status          project_status? @default(ACTIVE)
+  created_date    DateTime?       @default(now())
+  updated_date    DateTime?
+  project_id      Int
+  project         project         @relation(fields: [project_id], references: [id], map: "Collection_project_id_fkey")
+
+  @@index([id, collection_name, status], map: "Collection_id_project_name_status_idx")
+  @@index([project_id], map: "Collection_project_id_fkey")
 }
 
 model role {
@@ -119,4 +131,14 @@ enum api_status {
   ACTIVE
   INACTIVE
   DELETE
+}
+
+enum http_methods {
+  GET
+  POST
+  PUT
+  PATCH
+  DELETE
+  HEAD
+  OPTIONS
 }
